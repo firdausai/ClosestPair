@@ -57,7 +57,7 @@ middleLine <- average(sortedX,"X")
 
 #Add middle line to graph
 graph <- graph + geom_vline(xintercept = middleLine)
-graph 
+graph
 
 #Sort points based on their location (to the left & right of middle line)
 LPoints <- filter(sortedX, X < middleLine)
