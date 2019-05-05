@@ -1,46 +1,37 @@
-library(shiny)
-library(tidyverse)
-library(ggplot2)
-
-source(functions.R)
-
-# Define UI ----
-ui <- fluidPage(
-  titlePanel("Closest Pair with Devide and Conquere Method"),
-  
-  sidebarLayout(
-    sidebarPanel(
-      fileInput("file1", "Choose CSV File",
-                multiple = FALSE,
-                accept = c("text/csv",
-                           "text/comma-separated-values,text/plain",
-                           ".csv"))
-    ),
-    mainPanel(
-      plotOutput("scatterPlot")
-    )
-  )
-)
-
 # Define server logic ----
 server <- function(input, output) {
   
+  data <- reactive({
+    inFile <- input$file1
+    if (is.null(inFile)) return(NULL)
+    read.csv(inFile$datapath,
+             sep = input$sep)
+  })
+  
+  output$text <- renderText({
+    paste("Shortest Distance :")
+  })
+  
+  output$Point1 <- renderText({
+    paste("Point 1 :")
+  })
+  
+  output$Point2 <- renderText({
+    paste("Point 2 :")
+  })
   
   output$scatterPlot <- renderPlot({
     
-    data <- reactive({
-      inFile <- input$file1
-      if (is.null(inFile)) return(NULL)
-      read_csv2(inFile$datapath)
-    })
-    
     #Check if data exist
-    validate(need(input$file1,"need filename"))
+    validate(need(input$file1,"Need Data!"))
     
     #convert to dataframe
     rawData <- data()
     sortedX <- rawData[order(rawData$X),]
     middleLine <- average(sortedX,"X")
+    
+    LPoints <- filter(sortedX, X < middleLine)
+    RPoints <- filter(sortedX, X > middleLine)
     
     #Calculate shortest distance left & right side
     shortestLeft <- bruteForce(LPoints)
@@ -49,11 +40,15 @@ server <- function(input, output) {
     shortestRightDistance <- shortestRight$Distance[[1]]
     
     #Determine which side has the shortest distance between points
-    minDistance <- compareMinValue(shortestLeftDistance,shortestRightDistance)
+    if(shortestLeftDistance < shortestRightDistance) {
+      minDistance <- shortestLeftDistance
+      coordinates <- shortestLeft
+    } else {
+      minDistance <- shortestRightDistance
+      coordinates <- shortestRight
+    }
     
     #Collect points within shortest distance range from the middle
-    #Has to be able to compare like value1 < x < value2
-    #check if filter() has parameters like above
     MPoints <- filter(sortedX, X < (middleLine+minDistance))
     MPoints <- filter(MPoints, X > (middleLine-minDistance))
     
@@ -67,11 +62,14 @@ server <- function(input, output) {
     
     #Determine shortest distance (Compare shortest distance from the middle and left or right)
     if (nrow(MPoints) > 1) {
-      finalSmallestDistance <- compareMinValue(minDistance,shortestMiddleDistance)
-      finalSmallestDistance
+      if(minDistance > shortestMiddleDistance) {
+        finalSmallestDistance <- shortestMiddleDistance
+        coordinates <- shortestMiddle
+      } else {
+        finalSmallestDistance <- minDistance
+      }
     } else {
       finalSmallestDistance <- minDistance
-      minDistance
     }
     
     graph <- ggplot(data = rawData, aes(x = X, y = Y)) +
@@ -86,8 +84,17 @@ server <- function(input, output) {
       graph <- graph + geom_point(aes(x = shortestRight$X[[2]],y = shortestRight$Y[[2]]),color = "red")
     }
     graph
+    
+    output$text <- renderText({
+      paste("Shortest Distance :", finalSmallestDistance)
+    })
+    
+    output$Point1 <- renderText({
+      paste("Point 1 :",coordinates$X[[1]],",",coordinates$Y[[1]])
+    })
+    
+    output$Point2 <- renderText({
+      paste("Point 2 :",coordinates$X[[2]],",",coordinates$Y[[2]])
+    })
   })
 }
-
-# Run the app ----
-shinyApp(ui = ui, server = server)

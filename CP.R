@@ -4,7 +4,7 @@ library(ggplot2)
 source(functions.R)
 
 #Read Data
-rawData <- read_csv2("C:\\Users\\Firdaus\\Documents\\ClosestPair\\data-raw\\kordinat.csv")
+rawData <- read_csv2("C:\\Users\\Firdaus\\Documents\\ClosestPair\\data-raw\\kordinat2.csv")
 sortedX <- rawData[order(rawData$X),]
 sortedY <- rawData[order(rawData$Y),]
 

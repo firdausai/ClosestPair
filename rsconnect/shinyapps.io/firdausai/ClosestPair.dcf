@@ -1,0 +1,13 @@
+name: ClosestPair
+title: ClosestPair
+username:
+account: firdausai
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 909307
+bundleId: 2060133
+url: https://firdausai.shinyapps.io/ClosestPair/
+when: 1556993397.82591
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .RData|CP.R|web.R|data-raw/kordinat.csv|data-raw/kordinat2.csv
