@@ -5,9 +5,9 @@ account: firdausai
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 909307
-bundleId: 2061066
+bundleId: 2061346
 url: https://firdausai.shinyapps.io/ClosestPair/
-when: 1557036009.69708
+when: 1557055549.03382
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: .RData|CP.R|data-raw/kordinat.csv|data-raw/kordinat2.csv
+ignoredFiles: .RData|CP.R|data-raw/2titik.csv|data-raw/koordinatsama.csv|data-raw/kordinat.csv|data-raw/kordinat2.csv|data-raw/satusisi.csv
