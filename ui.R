@@ -15,6 +15,7 @@ ui <- fluidPage(
                 accept = c("text/csv",
                            "text/comma-separated-values,text/plain",
                            ".csv")),
+      p("*make sure your CSV file only X and Y columns (all capital)"),
       radioButtons("sep", "Separator",
                    choices = c(Comma = ",",
                                Semicolon = ";",
